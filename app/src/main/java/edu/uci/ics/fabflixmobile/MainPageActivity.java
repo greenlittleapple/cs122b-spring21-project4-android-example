@@ -15,15 +15,15 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.CookieHandler;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Login extends AppCompatActivity {
+public class MainPageActivity extends AppCompatActivity {
 
-    private EditText username;
-    private EditText password;
+    private EditText searchQuery;
     private TextView message;
-    private Button loginButton;
+    private Button searchButton;
 
     /*
       In Android, localhost is the address of the device or the emulator.
@@ -39,19 +39,17 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // upon creation, inflate and initialize the layout
-        setContentView(R.layout.login);
-        username = findViewById(R.id.search);
-        password = findViewById(R.id.password);
+        setContentView(R.layout.main_page);
+        searchQuery = findViewById(R.id.search);
         message = findViewById(R.id.message);
-        loginButton = findViewById(R.id.searchBtn);
+        searchButton = findViewById(R.id.searchBtn);
 
         //assign a listener to call a function to handle the user request when clicking a button
-        loginButton.setOnClickListener(view -> login());
+        searchButton.setOnClickListener(view -> search());
     }
 
-    public void login() {
+    public void search() {
 
-        message.setText("Trying to login");
         // use the same network queue across our application
         final RequestQueue queue = NetworkManager.sharedManager(this).queue;
         // request type is POST
@@ -59,22 +57,22 @@ public class Login extends AppCompatActivity {
                 Request.Method.POST,
                 baseURL + "/api/login",
                 response -> {
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response);
-                        String status = jsonResponse.getString("status");
-                        String responseMessage = jsonResponse.getString("message");
-                        message.setText(responseMessage);
-                        Log.d("login", responseMessage);
-                        if(status != null && status.equals("success")) {
-                            // initialize the activity(page)/destination
-                            Intent mainPage = new Intent(Login.this, MainPageActivity.class);
-                            // activate the main page.
-                            startActivity(mainPage);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        message.setText("Error logging in.");
-                    }
+                    Intent mainPage = new Intent(MainPageActivity.this, ListViewActivity.class);
+                    startActivity(mainPage);
+//                    try {
+//                        JSONObject jsonResponse = new JSONObject(response);
+//                        String status = jsonResponse.getString("status");
+//                        String message = jsonResponse.getString("message");
+//                        if(status.equals("success")) {
+//                            Log.d("login.success", response);
+//                            // initialize the activity(page)/destination
+//                            Intent mainPage = new Intent(MainPageActivity.this, MainPageActivity.class);
+//                            // activate the list page.
+//                            startActivity(mainPage);
+//                        }
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
                 },
                 error -> {
                     // error
@@ -84,8 +82,7 @@ public class Login extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 // POST request form data
                 final Map<String, String> params = new HashMap<>();
-                params.put("username", username.getText().toString());
-                params.put("password", password.getText().toString());
+                params.put("searchQuery", searchQuery.getText().toString());
 
                 return params;
             }

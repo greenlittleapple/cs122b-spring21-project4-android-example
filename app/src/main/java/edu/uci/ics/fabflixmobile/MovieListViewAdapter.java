@@ -29,7 +29,7 @@ public class MovieListViewAdapter extends ArrayAdapter<Movie> {
         TextView titleView = view.findViewById(R.id.title);
         TextView subtitleView = view.findViewById(R.id.subtitle);
 
-        titleView.setText(movie.getName());
+        titleView.setText(movie.getTitle());
         // need to cast the year to a string to set the label
         subtitleView.setText(movie.getYear() + "");
 

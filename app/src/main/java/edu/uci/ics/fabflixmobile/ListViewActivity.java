@@ -1,6 +1,7 @@
 package edu.uci.ics.fabflixmobile;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -14,8 +15,11 @@ public class ListViewActivity extends Activity {
         setContentView(R.layout.listview);
         // TODO: this should be retrieved from the backend server
         final ArrayList<Movie> movies = new ArrayList<>();
-        movies.add(new Movie("The Terminal", (short) 2004));
-        movies.add(new Movie("The Final Season", (short) 2007));
+        ArrayList<String> genres = new ArrayList<>();
+        genres.add("action");
+        genres.add("political");
+        genres.add("thriller");
+        movies.add(new Movie("123", "The Boys", 2020, "The Boy", genres));
 
         MovieListViewAdapter adapter = new MovieListViewAdapter(movies, this);
 
@@ -24,8 +28,11 @@ public class ListViewActivity extends Activity {
 
         listView.setOnItemClickListener((parent, view, position, id) -> {
             Movie movie = movies.get(position);
-            String message = String.format("Clicked on position: %d, name: %s, %d", position, movie.getName(), movie.getYear());
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+//            String message = String.format("Clicked on position: %d, name: %s, %d", position, movie.getTitle(), movie.getYear());
+//            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            Intent singleMovie = new Intent(ListViewActivity.this, SingleMovie.class).putExtra("id", movie.getId());
+            // activate the main page.
+            startActivity(singleMovie);
         });
     }
 }
